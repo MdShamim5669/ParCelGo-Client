@@ -85,9 +85,11 @@ const Navbar = () => {
             </>
           )}
 
-          <Link to="/rider" className="btn bg-zap-green hover:bg-[#b0d952] border-none text-zap-dark rounded-[14px] px-6 font-semibold h-11 min-h-[44px]">
-            Be a Rider
-          </Link>
+          {user && (
+            <Link to="/rider" className="btn bg-zap-green hover:bg-[#b0d952] border-none text-zap-dark rounded-[14px] px-6 font-semibold h-11 min-h-[44px]">
+              Be a Rider
+            </Link>
+          )}
         </div>
       </div>
     </div>

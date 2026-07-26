@@ -72,13 +72,16 @@ const ManageUsers = () => {
                     <h1 className="text-2xl font-bold text-[#113236]">Manage Users</h1>
                     <p className="text-gray-500">View and manage all registered users and their roles.</p>
                 </div>
-                <div className="form-control">
+                <div className="form-control relative w-full sm:w-auto">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    </div>
                     <input 
                         type="text" 
-                        placeholder="Search users..." 
+                        placeholder="Search users by name or email..." 
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        className="input input-bordered w-full max-w-xs rounded-xl focus:border-[#c4f05b] focus:outline-none" 
+                        className="input bg-white border border-gray-200 text-black w-full sm:w-72 md:w-80 rounded-xl pl-10 focus:border-[#c4f05b] focus:ring-2 focus:ring-[#c4f05b]/20 focus:outline-none transition-all shadow-sm" 
                     />
                 </div>
             </div>
@@ -100,9 +103,13 @@ const ManageUsers = () => {
                                 <tr key={user._id || user.id} className="hover">
                                     <td>
                                         <div className="flex items-center gap-3">
-                                            <div className="avatar placeholder">
-                                                <div className="bg-[#eef8f8] text-[#3a837c] rounded-full w-10">
-                                                    <span className="font-bold">{user.name?.charAt(0) || 'U'}</span>
+                                            <div className="avatar">
+                                                <div className="w-10 h-10 rounded-full bg-[#eef8f8] text-[#3a837c] flex items-center justify-center border border-gray-100 overflow-hidden">
+                                                    {user.photoURL || user.image ? (
+                                                        <img src={user.photoURL || user.image} alt={user.name} className="object-cover w-full h-full" referrerPolicy="no-referrer" />
+                                                    ) : (
+                                                        <span className="font-bold">{user.name?.charAt(0) || 'U'}</span>
+                                                    )}
                                                 </div>
                                             </div>
                                             <div>
@@ -131,14 +138,15 @@ const ManageUsers = () => {
                                         {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}
                                     </td>
                                     <td className="text-right space-x-2">
-                                        <div className="dropdown dropdown-end">
-                                            <label tabIndex={0} className="btn btn-sm btn-ghost m-1">Change Role</label>
-                                            <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-40 border border-gray-100">
-                                                {user.role !== 'admin' && <li><a onClick={() => handleRoleChange(user._id || user.id, 'admin')}>Make Admin</a></li>}
-                                                {user.role !== 'rider' && <li><a onClick={() => handleRoleChange(user._id || user.id, 'rider')}>Make Rider</a></li>}
-                                                {user.role !== 'user' && <li><a onClick={() => handleRoleChange(user._id || user.id, 'user')}>Make User</a></li>}
-                                            </ul>
-                                        </div>
+                                        <select
+                                            value={user.role}
+                                            onChange={(e) => handleRoleChange(user._id || user.id, e.target.value)}
+                                            className="select select-sm bg-white border border-gray-200 text-[#113236] focus:border-[#c4f05b] focus:outline-none focus:ring-1 focus:ring-[#c4f05b] w-28 md:w-32 rounded-lg cursor-pointer"
+                                        >
+                                            <option value="user">User</option>
+                                            <option value="rider">Rider</option>
+                                            <option value="admin">Admin</option>
+                                        </select>
                                         <button 
                                             onClick={() => handleDelete(user._id || user.id)}
                                             className="btn btn-sm btn-square btn-ghost text-red-500 hover:bg-red-50"
