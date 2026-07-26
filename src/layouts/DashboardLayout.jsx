@@ -1,7 +1,10 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import Sidebar from '../components/layout/Sidebar';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const DashboardLayout = () => {
+  const location = useLocation();
+
   return (
     <div className="drawer lg:drawer-open font-sans">
       <input id="dashboard-drawer" type="checkbox" className="drawer-toggle" />
@@ -20,7 +23,17 @@ const DashboardLayout = () => {
         {/* Main Content Area */}
         <div className="w-full flex-grow p-4 md:p-8 overflow-y-auto">
             <div className="max-w-[1200px] mx-auto w-full">
-              <Outlet />
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={location.pathname}
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -15 }}
+                  transition={{ duration: 0.5, ease: "easeInOut" }}
+                >
+                  <Outlet />
+                </motion.div>
+              </AnimatePresence>
             </div>
         </div>
       </div>
